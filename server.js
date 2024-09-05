@@ -1,7 +1,7 @@
 const axios = require('axios');
 const express = require('express');
 const app = express();
-const port = 3000;  // 서버 포트 번호 설정
+const port = 80;  // 서버 포트 번호 설정
 
 const client_id = '1Fk0H5T_fK33HSz85F5y';
 const client_secret = 'bdd2oJeH3V';
