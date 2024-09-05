@@ -1,7 +1,7 @@
 const axios = require('axios');
 const express = require('express');
 const app = express();
-const port = 80;  // 서버 포트 번호 설정
+const port = 3000;  // 서버 포트 번호 설정
 
 const client_id = '1Fk0H5T_fK33HSz85F5y';
 const client_secret = 'bdd2oJeH3V';
@@ -30,7 +30,15 @@ app.get('/news', async (req, res) => {
             headers: headers,
             params: params,
         });
-        res.json(response.data.items);  // 결과를 JSON 형태로 응답
+
+        // 결과에서 description을 제거하고 pubDate와 link를 포함한 새로운 객체 배열로 변환
+        const formattedItems = response.data.items.map(item => ({
+            title: item.title,
+            pubDate: item.pubDate,  // pubDate를 추가
+            link: item.link         // link를 추가
+        }));
+
+        res.json(formattedItems);  // 수정된 결과를 JSON 형태로 응답
     } catch (error) {
         console.error('Error retrieving news:', error.response ? error.response.data : error.message);
         res.status(500).json({ error: 'Error retrieving news' });
