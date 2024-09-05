@@ -1,13 +1,18 @@
 const axios = require('axios');
+const express = require('express');
+const app = express();
+const port = 3000;  // 서버 포트 번호 설정
 
 const client_id = '1Fk0H5T_fK33HSz85F5y';
 const client_secret = 'bdd2oJeH3V';
 
-async function getNews() {
+// '/news' 엔드포인트로 뉴스 API 호출
+app.get('/news', async (req, res) => {
+    const query = req.query.query || '농산물';  // 기본 검색어 설정 또는 쿼리 파라미터로 받음
+    const display = req.query.display || 30;  // 기본 값 또는 쿼리 파라미터로 받음
+    const sort = req.query.sort || 'date';  // 기본 값 또는 쿼리 파라미터로 받음
+
     const url = 'https://openapi.naver.com/v1/search/news.json';
-    const query = '농산물';  // 검색할 키워드
-    const display = 30;  // 가져올 뉴스 기사 수
-    const sort = 'date';  // 날짜순 정렬
 
     const headers = {
         'X-Naver-Client-Id': client_id,
@@ -25,10 +30,14 @@ async function getNews() {
             headers: headers,
             params: params,
         });
-        console.log(response.data.items);
+        res.json(response.data.items);  // 결과를 JSON 형태로 응답
     } catch (error) {
         console.error('Error retrieving news:', error.response ? error.response.data : error.message);
+        res.status(500).json({ error: 'Error retrieving news' });
     }
-}
+});
 
-getNews();
+// 서버 실행
+app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
+});
